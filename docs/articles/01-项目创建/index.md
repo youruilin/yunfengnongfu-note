@@ -1,49 +1,15 @@
-test---
-outline: deep
----
+# 项目创建
 
-# Runtime API Examples
+## 为什么创建？
 
-This page demonstrates usage of some of the runtime APIs provided by VitePress.
+母亲在用的一套进销存系统（是她15年前买的），功能非常强大，集成了仓储、批发、零售，甚至关联了电子秤，当然也包括财务。
 
-The main `useData()` API can be used to access site, theme, and page data for the current page. It works in both `.md` and `.vue` files:
+但，完善的业务闭环导致了系统非常封闭，系统之外的业务（例如：微信收款、电商、大客户佣金等）流水，频繁的依靠人工手动录入。
 
-```md
-<script setup>
-import { useData } from 'vitepress'
+以门店零售的微信收款为例，需要手动找到每一条交易记录 ，然后截屏，然后分别发送至电脑，手动录入进销存系统。截屏为了不被 、混淆，需要录一张的同时、把它删掉，删掉之前需要手动裁切为适合的尺寸，将它作为原始凭证整齐的排列在一张a4纸上..
 
-const { theme, page, frontmatter } = useData()
-</script>
+过程非常耗时，严重浪费了原本可以陪伴她可爱的孙子的宝贵时间。
 
-## Results
+于是，我想试着建立这个叫做统一对账的系统。
 
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-```
-
-<script setup>
-import { useData } from 'vitepress'
-
-const { site, theme, page, frontmatter } = useData()
-</script>
-
-## Results
-
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-
-## More
-
-Check out the documentation for the [full list of runtime APIs](https://vitepress.dev/reference/runtime-api#usedata).
+说干就干了！

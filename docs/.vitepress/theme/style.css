@@ -139,9 +139,9 @@
 
 
 /* --------------------------------------------------------- */
-.vp-doc div.fold[class*=language-]>.fold-btn{
-  height: 22px;
-  bottom: 22px;
+div.fold .fold-btn{
+  height: 24px !important;
+  bottom: -24px !important;
 }
 
 svg.fold-btn-icon{

@@ -85,7 +85,12 @@ function getSideBarItemTreeData(
     } else if (isMarkdownFile(fileOrDirName) && ignoreFileName !== fileOrDirName) {
       // 当前为文件
       const matchResult = fileOrDirName.match(/(.+)\.md/)
-      const text = matchResult && matchResult[0].match(/^[0-9]{2}-.+/) ? matchResult[0].substring(3) : fileOrDirName
+      // const text = matchResult && matchResult[0].match(/^[0-9]{2}-.+/) ? matchResult[0].substring(3) : fileOrDirName
+      const text =
+        matchResult && matchResult[0].match(/^[0-9]{2}-.+/)
+          ? matchResult[0].substring(3).replace(/\.md$/, '')
+          : fileOrDirName.replace(/\.md$/, '')
+
       const fileData: SideBarItem = {
         text,
         link: fileOrDirFullPath.split('docs')[1].replace('.md', '').replace(/\\/g, '/'),

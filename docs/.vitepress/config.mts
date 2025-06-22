@@ -7,6 +7,7 @@ import { getNavData } from './navbar.mjs'
 export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
+  lastUpdated: true, // ✅ 开启“最近更新时间”
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     // nav: [
@@ -24,6 +25,13 @@ export default defineConfig({
     //   }
     // ],
 
+    // lastUpdated: {
+    //   text: 'Updated at',
+    //   formatOptions: {
+    //     dateStyle: 'full',
+    //     timeStyle: 'medium'
+    //   }
+    // },
     nav: getNavData({ enableDirActiveMatch: true }), // 顶部的导航栏
     sidebar: getSidebarData(), // 侧边栏
 
