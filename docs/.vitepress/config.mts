@@ -7,7 +7,20 @@ import { getNavData } from './navbar.mjs'
 export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
-  lastUpdated: true, // ✅ 开启“最近更新时间”
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en'
+    },
+    jp: {
+      label: 'Japanese',
+      lang: 'jp', // 可选，将作为 `lang` 属性添加到 `html` 标签中
+      // link: '/jp/' // 默认 /fr/ -- 显示在导航栏翻译菜单上，可以是外部的
+
+      // 其余 locale 特定属性...
+    }
+  },
+  // lastUpdated: true, // ✅ 开启“最近更新时间”
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     // nav: [
@@ -25,18 +38,21 @@ export default defineConfig({
     //   }
     // ],
 
-    // lastUpdated: {
-    //   text: 'Updated at',
-    //   formatOptions: {
-    //     dateStyle: 'full',
-    //     timeStyle: 'medium'
-    //   }
-    // },
+    lastUpdated: {
+      text: '最后更新于',
+      // formatOptions: {
+      //   dateStyle: 'full',
+      //   timeStyle: 'medium'
+      // }
+    },
     nav: getNavData({ enableDirActiveMatch: true }), // 顶部的导航栏
     sidebar: getSidebarData(), // 侧边栏
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
+    ],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2019-present You Ruilin'
+    }
   }
 })

@@ -70,8 +70,10 @@ function getSideBarItemTreeData(
     if (stats.isDirectory()) {
       if (!ignoreDirNames.includes(fileOrDirName)) {
         // 当前为文件夹
+        // 定义正则
+        const cleanName = (name: string) => name.match(/^[0-9]{2}-.+/) ? name.substring(3) : name
         const dirData: SideBarItem = {
-          text: fileOrDirName,
+          text: cleanName(fileOrDirName),
           collapsed: false,
         }
         if (level !== maxLevel) {
