@@ -63,6 +63,7 @@ function getSideBarItemTreeData(
 ): SideBarItem[] {
   // 获取所有文件名和目录名
   const allDirAndFileNameArr = readdirSync(dirFullPath)
+  // 初始化为一个空数组
   const result: SideBarItem[] = []
   allDirAndFileNameArr.map((fileOrDirName: string, idx: number) => {
     const fileOrDirFullPath = path.join(dirFullPath, fileOrDirName)
