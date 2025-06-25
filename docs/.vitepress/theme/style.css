@@ -149,3 +149,18 @@ svg.fold-btn-icon{
   height: 12px;
   animation: float1 infinite 2.2s !important;
 }
+
+/* 正则国际化 */
+.p-en.hidden {
+  display: none;
+}
+.p-zh {
+  cursor: pointer;
+  /* color: #1e88e5; */
+}
+
+.p-en{
+  border-top: 1px dashed rgb(26, 43, 52);
+  opacity: 0.6;
+  padding-top: 5px;
+}
