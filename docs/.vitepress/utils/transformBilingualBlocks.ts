@@ -17,7 +17,7 @@
 
 export function transformBilingualBlocks() {
   const regex = /【([^|【】]+)\|([^|【】]+)】/g
-  const contentBlocks = document.querySelectorAll('.VPDoc div, .VPDoc p, .VPDoc li')
+  const contentBlocks = document.querySelectorAll('p')
 
   contentBlocks.forEach(block => {
     if (!block.innerHTML.includes('【') || !regex.test(block.innerHTML)) return

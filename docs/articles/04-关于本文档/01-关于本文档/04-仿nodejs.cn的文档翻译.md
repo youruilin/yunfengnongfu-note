@@ -58,7 +58,7 @@ export default {
 ```ts
 export function transformBilingualBlocks() {
   const regex = /【([^|【】]+)\|([^|【】]+)】/g
-  const contentBlocks = document.querySelectorAll('.VPDoc div, .VPDoc p, .VPDoc li')
+  const contentBlocks = document.querySelectorAll('p') // 注意选定区域，避免整个页面标签递归替换
 
   contentBlocks.forEach(block => {
     if (!block.innerHTML.includes('【') || !regex.test(block.innerHTML)) return
