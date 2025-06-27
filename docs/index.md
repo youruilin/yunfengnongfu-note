@@ -11,8 +11,8 @@ hero:
     alt: VitePress
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: 开发全过程
+      link: articles/01-项目创建/
     - theme: alt
       text: API Examples
       link: /api-examples

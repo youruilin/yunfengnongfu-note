@@ -37,7 +37,7 @@ export function getNavData(navGenerateConfig: NavGenerateConfig) {
 }
 interface NavItem {
   text: string
-  link?: string
+  link: string
   activeMatch?: string
   children?: NavItem[]
 }
