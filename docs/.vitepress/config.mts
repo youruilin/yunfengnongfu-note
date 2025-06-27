@@ -7,6 +7,7 @@ import { getNavData } from './navbar.mjs'
 export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
+  base:"/vitepress_init/",
   locales: {
     root: {
       label: 'English',
