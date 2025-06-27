@@ -1,5 +1,5 @@
 // https://vitepress.dev/guide/custom-theme
-import { h, watch } from 'vue'
+import { h, watch, onMounted } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
@@ -24,16 +24,32 @@ export default {
     const { frontmatter } = useData();
     const route = useRoute();
 
-    watch(
-      () => route.path,
-      () => {
-        // 路由变化时触发
-        setTimeout(() => {
-          transformBilingualBlocks()
-        }, 0)
-      },
-      { immediate: true } // 如果首次加载也需要执行
-    )
+    // watch(
+    //   () => route.path,
+    //   () => {
+    //     // 路由变化时触发
+    //     setTimeout(() => {
+    //       transformBilingualBlocks()
+    //     }, 0)
+    //   },
+    //   { immediate: true } // 如果首次加载也需要执行
+    // )
+
+    onMounted(() => {
+      if (typeof document === 'undefined') return
+
+      watch(
+        () => route.path,
+        () => {
+          // 延迟等待 DOM 渲染后再执行
+          setTimeout(() => {
+            transformBilingualBlocks()
+          }, 0)
+        },
+        { immediate: true }
+      )
+    })
+    
 
     // 基础使用
     // codeblocksFold({ route, frontmatter });
