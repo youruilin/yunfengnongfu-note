@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # 关键设置，确保 git log 可获取完整历史
 
       - name: Setup Node
         uses: actions/setup-node@v3
