@@ -1,17 +1,16 @@
 import { defineConfig } from 'vitepress'
-import { getSidebarData } from './sidebar.mts'
-import { getNavData } from './navbar.mjs'
+import { getSidebarData } from '../sidebar.mts'
+import { getNavData } from '../navbar.mjs'
 
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
-  base:"/vitepress_init/",
   locales: {
     root: {
-      label: 'English',
-      lang: 'en'
+      label: '简体中文',
+      lang: 'zh'
     },
     jp: {
       label: 'Japanese',
@@ -37,6 +36,12 @@ export default defineConfig({
     //     ]
     //   }
     // ],
+
+    i18nRouting : true, // ✅ 开启国际化路由
+    outline: {
+      label: '页面导航'
+    },
+
     
     // lastUpdated: true, // ✅ 开启“最近更新时间”
     lastUpdated: {

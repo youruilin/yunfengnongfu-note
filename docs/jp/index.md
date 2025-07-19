@@ -4,15 +4,15 @@ layout: home
 
 hero:
   name: "统一对账S1"
-  text: "Vue3+TS+Pinia+Vant"
+  text: "基于Vue技术栈的<br>移动对账系统"
   tagline: 调用后端api接口，对批量图像转换后进行文字信息结构化识别、形成对账数据。
   image:
-    src: /public/3.svg
+    src: /3.svg
     alt: VitePress
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: 开发全过程
+      link: articles/01-项目创建/
     - theme: alt
       text: API Examples
       link: /api-examples
