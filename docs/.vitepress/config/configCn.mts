@@ -39,6 +39,7 @@ export default defineConfig({
 
     i18nRouting : true, // ✅ 开启国际化路由
     outline: {
+      level: [1, 2],
       label: '页面导航'
     },
 

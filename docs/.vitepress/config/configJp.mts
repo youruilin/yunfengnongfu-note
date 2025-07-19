@@ -42,7 +42,6 @@ export default defineConfig({
       label: 'おはよう'
     },
 
-    
     // lastUpdated: true, // ✅ 开启“最近更新时间”
     lastUpdated: {
       text: '最后更新于',

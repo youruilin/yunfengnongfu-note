@@ -19,6 +19,7 @@ interface NavGenerateConfig {
   enableDirActiveMatch: boolean
   /**
    * 需要遍历的目录. 默认:articles
+   * 以docs为根目录
    */
   dirName?: string
   /**
@@ -28,7 +29,7 @@ interface NavGenerateConfig {
 }
 
 export function getNavData(navGenerateConfig: NavGenerateConfig) {
-  const { enableDirActiveMatch, dirName = 'articles', maxLevel = 1 } = navGenerateConfig
+  const { enableDirActiveMatch, dirName = '/jp/articles', maxLevel = 1 } = navGenerateConfig
   const dirFullPath = path.resolve(__dirname, `../${dirName}`)
   const result = getNavDataArr(dirFullPath, 1, maxLevel, enableDirActiveMatch)
   // console.log('navData')

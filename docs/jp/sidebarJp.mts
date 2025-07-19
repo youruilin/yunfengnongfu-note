@@ -15,6 +15,7 @@ function isMarkdownFile(fileName: string) {
 interface SidebarGenerateConfig {
   /**
    * 需要遍历的目录. 默认:articles
+   * 以docs为根目录
    */
   dirName?: string
   /**
