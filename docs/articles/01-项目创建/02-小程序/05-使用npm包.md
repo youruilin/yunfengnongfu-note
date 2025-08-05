@@ -351,3 +351,143 @@ async getInfo() {
 - mobxmobx-miniprogramminiprogram-bindings 用来 把 Store 中的共享数据或方法 ，绑定到组件或页面中使用
 
 ![image-20250804233926050](../../../public/image-store.png)
+
+### 安装MobX相关的包
+
+```
+npm i --save mobx-miniprogram mobx-miniprogram-bindings
+```
+
+注意： MobX 相关的包安装完毕之后，记得删除 miniprogram_npm 目录后，重新构建 npm。
+
+### 创建 Mobx 的 store 实例
+
+```js
+// /utils/store.js
+import { observable, action } from 'mobx-miniprogram'
+
+export const store = observable({
+  // 数据字段
+  numA: 1,
+  numB: 2,
+  // 计算属性
+  get sum() {
+    return this.numA + this.numB
+  },
+  // actions 方法,用来修改 store 中的数据
+  updateNum1: action(function (step) {
+    this.numA += step
+  }),
+  updateNum2: action(function (step) {
+    this.numB += step
+  }),
+})
+```
+
+### 绑定到页面&使用
+
+```js
+// 页面的 .js 文件
+import { createStoreBindings } from 'mobx-miniprogram-bindings'
+import { store } from '../../store/store'
+
+Page({
+  onLoad: function () { // 生命周期函数--监听页面加载
+    this.storeBindings = createStoreBindings(this, {
+      store,
+      fields: ['numA', 'numB', 'sum'],
+      actions: ['updateNum1']
+    })
+  },
+  onUnload: function () { // 生命周期函数--监听页面卸载
+    this.storeBindings.destroyStoreBindings()
+  }
+})
+```
+
+```html
+// 页面的 .wxml 结构
+<view>{{numA}} + {{numB}} = {{sum}}</view>
+<van-button type="primary" bindtap="btnHandler1" data-step="{{1}}">
+numA + 1
+</van-button>
+<van-button type="danger" bindtap="btnHandler1" data-step="{{-1}}">
+numA - 1
+</van-button>
+
+// 按钮 tap 事件的处理函数
+btnHandler1(e) {
+    this.updateNum1(e.target.dataset.step)
+}
+```
+
+### 绑定到组件中&使用
+
+```js
+// 组件js文件
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
+import { store } from '../../store/store'
+
+Component({
+  behaviors: [storeBindingsBehavior], // 通过 storeBindingsBehavior 来实现自动绑定
+
+  storeBindings: {
+    store, // 指定要绑定的 Store
+    fields: { // 指定要绑定的字段数据
+      numA: () => store.numA, // 绑定字段的第 1 种方式
+      numB: (store) => store.numB, // 绑定字段的第 2 种方式
+      sum: 'sum' // 绑定字段的第 3 种方式
+    },
+    actions: { // 指定要绑定的方法
+      updateNum2: 'updateNum2'
+    }
+  },
+})
+```
+
+```html
+// 组件的 .wxml 结构
+<view>{{numA}} + {{numB}} = {{sum}}</view>
+<van-button type="primary" bindtap="btnHandler2" data-step="{{1}}">
+numB + 1
+</van-button>
+<van-button type="danger" bindtap="btnHandler2" data-step="{{-1}}">
+numB - 1
+</van-button>
+
+// 组件的方法列表
+methods: {
+  btnHandler2(e) {
+    this.updateNum2(e.target.dataset.step)
+  }
+}
+```
+
+::: details 事件对象 `e` 是什么？
+
+当用户点击按钮时，会触发 `bindtap="btnHandler2"` 绑定的方法 `btnHandler2`，并且小程序会将一个 **事件对象 `e`** 传递给这个方法。
+
+这个事件对象 `e` 中包含了很多信息，比如：
+
+- 触发事件的 DOM 元素（或组件实例）相关信息
+- 用户交互的相关数据
+- 你通过 `data-*` 自定义属性绑定的数据
+
+------
+
+`e.target.dataset.step` 的含义：
+
+- `e.target`：指的是 **触发事件的那个具体元素节点**，在这里就是你点击的那个 `<van-button>` 按钮。
+- `.dataset`：是小程序提供的一个对象，用来获取该元素上所有 `data-*` 自定义属性的值。
+- `.step`：指的是 `data-step` 这个自定义属性对应的值。
+
+所以：
+
+```
+e.target.dataset.step
+```
+
+表示：**获取触发事件的元素上，名为 data-step 的自定义属性的值**。
+
+:::
+
