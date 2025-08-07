@@ -1,35 +1,56 @@
 {
-  "hash": "3e3912c9",
-  "configHash": "104173e1",
+  "hash": "1f9ac3cc",
+  "configHash": "cf203549",
   "lockfileHash": "926dd8a5",
-  "browserHash": "2eaa5206",
+  "browserHash": "7025ac5d",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.5.17/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "66a6b8d1",
+      "fileHash": "630d7ff9",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@7.7.7/node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "58f4eacd",
+      "fileHash": "2e229fbc",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/.pnpm/@vueuse+core@12.8.2/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "e2d3b510",
+      "fileHash": "438033c0",
+      "needsInterop": false
+    },
+    "vitepress > @vueuse/integrations/useFocusTrap": {
+      "src": "../../../../node_modules/.pnpm/@vueuse+integrations@12.8.2_focus-trap@7.6.5/node_modules/@vueuse/integrations/useFocusTrap.mjs",
+      "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
+      "fileHash": "e9d98f92",
+      "needsInterop": false
+    },
+    "vitepress > mark.js/src/vanilla.js": {
+      "src": "../../../../node_modules/.pnpm/mark.js@8.11.1/node_modules/mark.js/src/vanilla.js",
+      "file": "vitepress___mark__js_src_vanilla__js.js",
+      "fileHash": "ca27b6ce",
+      "needsInterop": false
+    },
+    "vitepress > minisearch": {
+      "src": "../../../../node_modules/.pnpm/minisearch@7.1.2/node_modules/minisearch/dist/es/index.js",
+      "file": "vitepress___minisearch.js",
+      "fileHash": "03e7d1e2",
       "needsInterop": false
     },
     "vitepress-plugin-codeblocks-fold": {
       "src": "../../../../node_modules/.pnpm/vitepress-plugin-codeblocks-fold@1.2.35/node_modules/vitepress-plugin-codeblocks-fold/lib/index.js",
       "file": "vitepress-plugin-codeblocks-fold.js",
-      "fileHash": "0a1bb141",
+      "fileHash": "0f30fd01",
       "needsInterop": false
     }
   },
   "chunks": {
+    "chunk-45PRYOM6": {
+      "file": "chunk-45PRYOM6.js"
+    },
     "chunk-RJY4QFKG": {
       "file": "chunk-RJY4QFKG.js"
     }

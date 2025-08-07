@@ -491,3 +491,340 @@ e.target.dataset.step
 
 :::
 
+
+
+## 分包
+
+### 基础概念
+
+分包指的是把一个完整的小程序项目，按照需求划分为不同的子包，在构建时打包成不同的分包，用户在使用时按需进行加载。
+
+对小程序进行分包的好处主要有以下两点：
+
+- 可以优化小程序首次启动的下载时间
+- 在多团队共同开发时可以更好的解耦协作
+
+分包前，小程序项目中 所有的页面 和资源 都被打包到了一起，导致整个 项目体积过大，影响小程序首次启动的下载时间。
+
+![image-20250806093637558](../../../public/image-分包前.png)
+
+### 分包后的项目构成
+
+分包后，小程序项目由 1 个主包 + 多个分包组成：
+
+- 主包：一般只包含项目的 启动页面 或 TabBar 页面 、以及所有分包都需要用到的一些 公共资源
+- 分包：只包含和当前分包有关的页面和私有资源
+
+![image-20250806093903934](../../../public/image-分包后.png)
+
+### 分包的加载规则
+
+① 在小程序启动时，默认会 下载主包 并启动主包内页面
+
+- tabBar 页面需要放到主包中
+
+② 当用户进入分包内某个页面时，客户端会把对应分包下载下来，下载完成后再进行展示
+
+- 非 tabBar 页面可以按照功能的不同，划分为不同的分包之后，进行按需下载
+
+### 分别的体积限制
+
+目前，小程序分包的大小有以下两个限制：
+
+- 整个小程序所有分包大小不超过 16M （主包 + 所有分包）
+- 单个分包 /主包大小不能超过 2M
+
+## 使用分包
+
+### 1. 配置方法
+
+<div style="display: flex; gap: 10px;">
+    <img src="../../../public/image-目录结构.png" width="300" />
+    <img src="../../../public/image-目录结构1.png" width="300" />
+</div>
+
+### 2. 打包原则
+
+① 小程序会按 subpackages 的配置进行分包，subpackages 之外的目录将被打包到主包中
+
+② 主包也可以有自己的 pages（即最外层的 pages 字段）
+
+③ tabBar 页面必须在主包内
+
+④ 分包之间不能互相嵌套
+
+### 3. 引用原则
+
+① 主包无法引用分包内的私有资源
+
+② 分包之间不能相互引用私有资源
+
+③ 分包可以引用主包内的公共资源
+
+![image-20250806225747845](../../../public/image-引用原则.png)
+
+## 独立分包
+
+### 1. 概述
+
+独立分包 本质上也是分包，只不过它比较特殊 可以独立于主包和其他分包而单独运行。
+
+![image-20250806225943406](../../../public/image-独立分包.png)
+
+最主要的区别： 是否依赖于主包才能运行
+
+- 普通分包必须依赖于主包才能运行
+- 独立分包可以在不下载主包的情况下，独立运行
+
+### 使用场景
+
+开发者可以按需，将某些具有一定功能独立性的页面配置到独立分包中。原因如下：
+
+- 当小程序从普通的分包页面启动时，需要首先下载主包
+- 而独立分包 不依赖主包即可运行，可以很大程度上提升分包页面的启动速度
+
+注意：一个小程序中可以有多个独立分包。
+
+### 配置方法
+
+<div style="display: flex; gap: 10px;">
+    <img src="../../../public/image-独立分包配置.png" width="300" />
+    <img src="../../../public/image-独立分包配置1.png" width="600" />
+</div>
+
+### 引用原则
+
+独立分包和普通分包以及主包之间，是相互隔绝的，不能相互引用彼此的资源：
+
+① 主包无法引用独立分包内的私有资源
+
+② 独立分包之间，不能相互引用私有资源
+
+③ 独立分包和普通分包之间，不能相互引用私有资源
+
+④ 特别注意：独立分包中不能引用主包内的公共资源
+
+## 分包预下载
+
+分包预下载指的是：在进入小程序的某个页面时，由框架自动预下载可能需要的分包 ，从而提升进入后续分包页面时的启动速度。
+
+### 配置方法
+
+预下载分包的行为，会在进入指定的页面时触发在 app.json 中，使用 preloadRule 节点定义分包的预下载规则，示例代码如下：
+
+```json
+{
+  "preloadRule": { // 分包预下载的规则
+    "pages/contact/contact": { // 触发分包预下载的页面路径
+      // network 表示在指定的网络模式下进行预下载,
+      // 可选值为: all (不限网络)和 wifi (仅 wifi 模式下进行预下载)
+      // 默认值为: wifi
+      "network": "all",
+      // packages 表示进入页面后,预下载哪些分包
+      // 可以通过 root 或 name 指定预下载哪些分包
+      "packages": ["pkgA"]
+    }
+  }
+}
+```
+
+同一个分包中的页面享有共同的预下载大小限额 2M：
+
+<div style="display: flex; gap: 10px;">
+    <img src="../../../public/image-分包限制.png" width="auto" />
+    <img src="../../../public/image-分包限制1.png" width="auto" />
+</div>
+
+
+## 案例 - 自定义tabBar
+
+> 基础库 2.5.0 开始支持，低版本需做[兼容处理](https://developers.weixin.qq.com/miniprogram/analysis/experience/compatibility.html)。
+
+自定义 tabBar 可以让开发者更加灵活地设置 tabBar 样式，以满足更多个性化的场景。
+
+在自定义 tabBar 模式下：
+
+- 为了保证低版本兼容以及区分哪些页面是 tab 页，tabBar 的相关配置项需完整声明，但这些字段不会作用于自定义 tabBar 的渲染。
+- 此时需要开发者提供一个自定义组件来渲染 tabBar，所有 tabBar 的样式都由该自定义组件渲染。推荐用 fixed 在底部的 [cover-view](https://developers.weixin.qq.com/miniprogram/dev/component/cover-view.html) + [cover-image](https://developers.weixin.qq.com/miniprogram/dev/component/cover-image.html) 组件渲染样式，以保证 tabBar 层级相对较高。
+- 与 tabBar 样式相关的接口，如 [wx.setTabBarItem](https://developers.weixin.qq.com/miniprogram/dev/api/ui/tab-bar/wx.setTabBarItem.html) 等将失效。
+- **每个 tab 页下的自定义 tabBar 组件实例是不同的**，可通过自定义组件下的 `getTabBar` 接口，获取当前页面的自定义 tabBar 组件实例。
+
+**注意：如需实现 tab 选中态，要在当前页面下，通过 `getTabBar` 接口获取组件实例，并调用 setData 更新选中态。可参考底部的代码示例。**
+
+### 1. 配置信息
+
+- 在 `app.json` 中的 `tabBar` 项指定 `custom` 字段，同时其余 `tabBar` 相关配置也补充完整。
+- 所有 tab 页的 json 里需声明 `usingComponents` 项，也可以在 `app.json` 全局开启。
+
+示例：
+
+```json
+{
+  "tabBar": {
+    "custom": true,
+    "color": "#000000",
+    "selectedColor": "#000000",
+    "backgroundColor": "#000000",
+    "list": [{
+      "pagePath": "page/component/index",
+      "text": "组件"
+    }, {
+      "pagePath": "page/API/index",
+      "text": "接口"
+    }]
+  },
+  "usingComponents": {}
+}
+```
+
+### 2. 添加 tabBar 代码文件
+
+在代码根目录下添加入口文件:
+
+```text
+custom-tab-bar/index.js
+custom-tab-bar/index.json
+custom-tab-bar/index.wxml
+custom-tab-bar/index.wxss
+```
+
+根目录下，创建`custom-tab-bar`文件夹，依此创建完整的index组件文件。
+
+### 3. 编写 tabBar 代码
+
+用自定义组件的方式编写即可，该自定义组件完全接管 tabBar 的渲染。另外，自定义组件新增 `getTabBar` 接口，可获取当前页面下的自定义 tabBar 组件实例。
+
+#### 4. 样式覆盖
+
+样式隔离的相关背景知识请查阅[微信小程序文档](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/wxml-wxss.html#组件样式隔离)
+
+Vant Weapp 的所有组件都开启了`addGlobalClass: true`以接受外部样式的影响，可以使用如下 2 种方式覆盖组件样式
+
+> 在页面中使用 Vant Weapp 组件时，可直接在页面的样式文件中覆盖样式
+
+```html
+<van-button type="primary">主要按钮</van-button>
+/* page.wxss */
+.van-button--primary {
+  font-size: 20px;
+  background-color: pink;
+}
+```
+
+解除样式隔离
+
+> 在自定义组件中使用 Vant Weapp 组件时，需开启`styleIsolation: 'shared'`选项
+
+```html
+<van-button type="primary">主要按钮</van-button>
+```
+
+```js
+Component({
+  options: {
+    styleIsolation: 'shared',
+  },
+});
+```
+
+```css
+.van-button--primary {
+  font-size: 20px;
+  background-color: pink;
+}
+```
+
+
+
+## skyline 模式
+
+::: details 🌟 什么是 Skyline 模式？
+
+**Skyline 是微信小程序团队推出的一种新的渲染方案（渲染引擎）**，它基于 **现代前端技术栈（如类 Vue/React 的开发体验）**，并采用了 **更高效的渲染机制**，目标是让小程序：
+
+- **运行更快**
+- **开发更灵活**
+- **UI 更流畅**
+- **支持更复杂的交互和动画**
+
+它是对传统小程序渲染方式的一种 **升级和补充**，并不是完全取代原有模式，而是 **给开发者提供了更多选择**。
+
+------
+
+⚙️ Skyline 模式 vs 传统小程序模式
+
+|     对比维度     |     传统小程序模式（原渲染方式）      |                         Skyline 模式                         |
+| :--------------: | :-----------------------------------: | :----------------------------------------------------------: |
+|   **渲染引擎**   | 基于 WebView + 自研逻辑层与视图层通信 |           基于更高效的渲染管线，优化了 UI 渲染性能           |
+|   **开发体验**   |         使用 WXML + WXSS + JS         | 支持类 Vue/React 风格的开发方式（如使用 Skyline 组件、更灵活的模板语法等） |
+|   **性能表现**   |     一般，复杂 UI 或动画可能卡顿      |               更流畅，支持高性能动画与复杂组件               |
+|   **组件能力**   |  原生组件有限，自定义组件需手动优化   |        提供更多内置高性能组件，支持更灵活的组件化开发        |
+|   **适用场景**   |        适合简单、轻量级小程序         |          适合对性能、交互、UI 复杂度要求高的小程序           |
+| **是否默认开启** |        是（传统模式是默认的）         |                否（需要开发者主动开启和适配）                |
+
+------
+
+🛠 如何启用 Skyline 模式？
+
+目前，**Skyline 模式并不是所有小程序都默认支持**，需要满足以下条件：
+
+1. **微信客户端版本支持**：用户需使用较新版本的微信（一般要求微信基础库版本较高，如 2.32.0+，具体以官方文档为准）。
+2. **开发者主动开启**：在小程序项目的 `app.json`或页面配置中，通过配置项开启 Skyline 渲染模式。
+3. **使用 Skyline 支持的组件和语法**：部分传统 WXML 标签或用法可能不完全兼容，需要按 Skyline 的规范来编写页面。
+
+示例（在 app.json 中启用 Skyline 模式）：
+
+```
+{
+  "renderer": "skyline",
+  "usingComponents": {}
+}
+```
+
+> ⚠️ 注意：开启后，部分传统小程序标签或功能可能需要调整，具体以微信官方 Skyline 文档为准。
+
+------
+
+✨ Skyline 模式的优势
+
+1. **更快的渲染速度**：优化了 UI 构建和更新流程，页面更流畅，交互响应更迅速。
+2. **更丰富的组件能力**：提供更多内置高性能组件，支持复杂布局和动画。
+3. **更好的开发体验**：支持更灵活的模板语法，类 Vue/React 开发模式，提高开发效率。
+4. **支持复杂交互与动画**：适合游戏化小程序、营销活动页、电商详情页等对性能要求高的场景。
+
+:::
+
+使用 skyline 渲染模式的时候，需要进行如下适配：
+
+### 1. tabBar 组件样式兼容
+
+- tabBar 根组件需要添加 `pointer-events: auto`
+- tabBar 根组件定位需为 `position: absolute`
+
+```html
+<view class="tab-bar">
+  <!-- tabbar item-->
+</view>
+.tab-bar {
+  pointer-events: auto;
+  position: absolute;
+}
+```
+
+### 2. getTabBar 回调函数
+
+skyline 模式下，页面/组件上的 `getTabBar` 接口为异步回调的方式获取 tabBar 实例
+
+```js
+Page({
+  getInstance() {
+    if (typeof this.getTabBar === 'function' ) {
+      this.getTabBar((tabBar) => {
+        tabBar.setData({
+          selected: 0
+        })
+      })
+    }
+  }
+})
+```
