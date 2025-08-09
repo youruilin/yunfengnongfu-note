@@ -694,7 +694,123 @@ custom-tab-bar/index.wxss
 
 用自定义组件的方式编写即可，该自定义组件完全接管 tabBar 的渲染。另外，自定义组件新增 `getTabBar` 接口，可获取当前页面下的自定义 tabBar 组件实例。
 
-#### 4. 样式覆盖
+```html
+<!--custom-tab-bar/index.wxml-->
+<van-tabbar
+  active="{{ active }}"
+  active-color="#07c160"
+  inactive-color="#000"
+  bind:change="onChange"
+>
+<!-- info 是徽标的数值 -->
+<van-tabbar-item wx:for="{{ list }}" wx:key="index" info="{{ item.info ? item.info : '' }}">
+    <image
+      slot="icon"
+      src="{{ item.iconPath }}"
+      mode="aspectFit"
+      style="width: 30px; height: 18px;"
+    />
+    <image
+      slot="icon-active"
+      src="{{ item.selectedIconPath }}"
+      mode="aspectFit"
+      style="width: 30px; height: 18px;"
+    />
+    {{ item.text }}
+  </van-tabbar-item>
+  <!-- <van-tabbar-item icon="home-o">标签</van-tabbar-item>
+  <van-tabbar-item icon="search">标签</van-tabbar-item>
+  <van-tabbar-item icon="friends-o">标签</van-tabbar-item>
+  <van-tabbar-item icon="setting-o">标签</van-tabbar-item> -->
+</van-tabbar>
+
+```
+
+```js
+// custom-tab-bar/index.js
+
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings'
+import { store } from '../utils/store'
+
+
+Component({
+  behaviors: [storeBindingsBehavior], // 添加这个 behavior
+  storeBindings: {
+    store,
+    fields: {
+      sum: 'sum',
+    },
+  },
+  observers: {
+    'sum': function(value){
+      this.setData({
+        // 为store数组中的数据设置info字段
+        'list[2].info': value
+      })
+    }
+  },
+  options: {
+    // 此为样式隔离配置 - 小程序基础加强 d04 
+    // 表示页面 wxss 样式将影响到自定义组件 ，wxss 中指定的样式也会影响页面和其 他设置了 applyapply-shared 或 shared 的
+    styleIsolation: 'shared',
+  },
+
+  /**
+   * 组件的属性列表
+   */
+  properties: {
+
+  },
+
+  /**
+   * 组件的初始数据
+   */
+  data: {
+    active: 0,
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/static/tab/首页@3x.png",
+        "selectedIconPath": "/static/tab/首页_选择@3x.png"
+      },
+      {
+        "pagePath": "pages/zhishi/zhishi",
+        "text": "知识",
+        "iconPath": "/static/tab/知识@3x.png",
+        "selectedIconPath": "/static/tab/知识_选择@3x.png"
+      },
+      {
+        "pagePath": "pages/guide/guide",
+        "text": "指导",
+        "iconPath": "/static/tab/指导@3x.png",
+        "selectedIconPath": "/static/tab/指导_选择@3x.png",
+        info: 0
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "/static/tab/我的@3x.png",
+        "selectedIconPath": "/static/tab/我的_选择@3x.png"
+      }
+    ]
+  },
+
+  /**
+   * 组件的方法列表
+   */
+  methods: {
+    onChange(event) {
+      // event.detail 的值为当前选中项的索引
+      this.setData({ active: event.detail });
+    },
+  }
+})
+```
+
+
+
+### 4. 样式覆盖
 
 样式隔离的相关背景知识请查阅[微信小程序文档](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/wxml-wxss.html#组件样式隔离)
 
