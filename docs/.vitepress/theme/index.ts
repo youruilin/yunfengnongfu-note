@@ -2,6 +2,9 @@
 import { h, watch, onMounted } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+
+import ImgScroller from './components/ImgScroller.vue'
+
 import './style.css'
 
 import { useData, useRoute } from 'vitepress'
@@ -18,6 +21,7 @@ export default {
   },
   enhanceApp({ app, router, siteData }) {
     // ...
+    app.component('ImgScroller', ImgScroller)
   },
   setup() {
     // 获取前言和路由

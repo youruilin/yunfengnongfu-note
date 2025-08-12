@@ -164,3 +164,54 @@ svg.fold-btn-icon{
   opacity: 0.6;
   padding-top: 5px;
 }
+
+/*  */
+
+.img-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* 小屏时允许换行 */
+}
+
+/* 保持 200:350:200 的宽度比例 */
+.img-row img {
+  flex: 0 0 auto;
+  width: 20%; /* 左右图片 */
+  height: auto;
+  max-width: 100%;
+}
+
+.img-row img:nth-child(2) {
+  width: 35%; /* 中间图片 */
+}
+
+@media (max-width: 768px) {
+  /* 移动端改为按比例占满屏幕 */
+  .img-row img {
+    flex: 1 1 0;
+    width: 100%;
+  }
+}
+
+
+.img-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;   /* 横向滚动 */
+  overflow-y: hidden; /* 隐藏垂直滚动条 */
+  scroll-snap-type: x mandatory; /* 可选：让滑动对齐 */
+  -webkit-overflow-scrolling: touch; /* iOS 惯性滑动 */
+  padding-bottom: 10px; /* 防止滚动条遮住内容 */
+}
+
+/* 隐藏滚动条（可选） */
+/* .img-scroll::-webkit-scrollbar {
+  display: none;
+} */
+
+/* 图片样式 */
+.img-scroll img {
+  flex: 0 0 auto;     /* 防止图片被压缩 */
+  scroll-snap-align: start; /* 滑动时对齐 */
+  border-radius: 4px;
+}
