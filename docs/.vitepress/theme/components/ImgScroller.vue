@@ -33,10 +33,13 @@ export default {
 
     const isMobile = () => window.innerWidth <= props.mobileMaxWidth
 
-    const startHintTimer = (text) => {
+    let isInitialHint = false
+    const startHintTimer = (text, isInitial = false) => {
       if (!isMobile()) return
       clearTimeout(showDelayTimer)
       clearTimeout(hideTimer)
+
+      isInitialHint = isInitial
 
       currentHintText.value = text  // 设置当前提示文字
 
@@ -71,7 +74,7 @@ export default {
       if (isScrollAtEnd()) {
         if (!atEndHintShown) {
           hideHintNow()
-          startHintTimer(props.endHintText)
+          startHintTimer(props.endHintText, true)
           console.log('Scrolled to end')
           atEndHintShown = true
         }
@@ -81,6 +84,7 @@ export default {
     }
 
     const onUserInteract = () => {
+      if (isInitialHint) return // 首次提示不被中断
       hideHintNow()
     }
 
@@ -89,7 +93,7 @@ export default {
         const observer = new IntersectionObserver(
           (entries) => {
             if (entries[0].isIntersecting) {
-              startHintTimer(props.hintText)
+              startHintTimer(props.hintText, true) // 初始提示
               observer.disconnect()
             }
           },
