@@ -1,16 +1,9 @@
+<!-- .vitepress/theme/components/ImgScroller.vue -->
 <template>
   <div class="img-scroll-wrapper" ref="wrapper">
-    <!-- 提示框 -->
-    <div :class="['swipe-hint', { show: showHint }]">
-      <!-- slot 提示 -->
-      <slot name="hint" :type="hintType">
-        <!-- 默认提示文字（如果外部没定义 slot） -->
-        <span v-if="hintType === 'start'">👉 向右滑动查看更多图片</span>
-        <span v-else>这是最后一张图片了</span>
-      </slot>
-    </div>
+    <div :class="['swipe-hint', { show: showHint }]" ref="hint">{{ currentHintText }}</div>
 
-    <!-- 滑动容器 -->
+    <!-- 滑动容器：slot 模式，方便直接在 Markdown 里放 <img> -->
     <div class="img-scroll-inner" ref="scroller" @scroll="onScroll">
       <slot />
     </div>
@@ -23,34 +16,50 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 export default {
   name: 'ImgScroller',
   props: {
-    autoHideMs: { type: Number, default: 2500 }, // 提示自动隐藏时间（ms）
+    hintText: { type: String, default: '👉 向右滑动查看更多图片' },
+    endHintText: { type: String, default: '这是最后一张图片了' },
+    autoHideMs: { type: Number, default: 2000 }, // 提示自动隐藏时间（ms）
     mobileMaxWidth: { type: Number, default: 768 } // 认为是移动端的宽度阈值
   },
   setup(props) {
+
+    const currentHintText = ref(props.hintText)
+
     const scroller = ref(null)
     const wrapper = ref(null)
     const showHint = ref(false)
-    const hintType = ref('start') // 'start' | 'end'
-
     let hideTimer = null
     let showDelayTimer = null
-    let atEndHintShown = false
 
     const isMobile = () => window.innerWidth <= props.mobileMaxWidth
 
-    const startHintTimer = (type) => {
+    let isInitialHint = false
+    const startHintTimer = (text, isInitial = false) => {
       if (!isMobile()) return
       clearTimeout(showDelayTimer)
       clearTimeout(hideTimer)
 
-      hintType.value = type
+      isInitialHint = isInitial
 
+      currentHintText.value = text  // 设置当前提示文字
+
+      console.log('触发', text)
+
+      // 先延迟2秒显示提示
       showDelayTimer = setTimeout(() => {
         showHint.value = true
+        // 显示后再等 autoHideMs 毫秒隐藏
         hideTimer = setTimeout(() => {
           showHint.value = false
         }, props.autoHideMs)
       }, 1500)
+      console.log('已弹出提示', currentHintText.value)
+    }
+
+    const hideHintNow = () => {
+      showHint.value = false
+      clearTimeout(hideTimer)
+      clearTimeout(showDelayTimer) // 取消延迟显示
     }
 
     const isScrollAtEnd = () => {
@@ -59,10 +68,14 @@ export default {
       return el.scrollWidth - el.scrollLeft - el.clientWidth < 10
     }
 
+    let atEndHintShown = false
+
     const onScroll = () => {
       if (isScrollAtEnd()) {
         if (!atEndHintShown) {
-          startHintTimer('end')
+          hideHintNow()
+          startHintTimer(props.endHintText, true)
+          console.log('Scrolled to end')
           atEndHintShown = true
         }
       } else {
@@ -70,12 +83,17 @@ export default {
       }
     }
 
+    const onUserInteract = () => {
+      if (isInitialHint) return // 首次提示不被中断
+      hideHintNow()
+    }
+
     onMounted(() => {
       if (isMobile()) {
         const observer = new IntersectionObserver(
           (entries) => {
             if (entries[0].isIntersecting) {
-              startHintTimer('start')
+              startHintTimer(props.hintText, true) // 初始提示
               observer.disconnect()
             }
           },
@@ -85,20 +103,33 @@ export default {
           observer.observe(wrapper.value)
         }
       }
+
+      const el = scroller.value
+      if (!el) return
+      el.addEventListener('touchstart', onUserInteract, { passive: true })
+      el.addEventListener('touchmove', onUserInteract, { passive: true })
+      el.addEventListener('wheel', onUserInteract, { passive: true })
+      el.addEventListener('pointerdown', onUserInteract, { passive: true })
     })
 
     onBeforeUnmount(() => {
       clearTimeout(hideTimer)
       clearTimeout(showDelayTimer)
+      const el = scroller.value
+      if (!el) return
+      el.removeEventListener('touchstart', onUserInteract)
+      el.removeEventListener('touchmove', onUserInteract)
+      el.removeEventListener('wheel', onUserInteract)
+      el.removeEventListener('pointerdown', onUserInteract)
     })
 
-    return { scroller, wrapper, showHint, onScroll, hintType }
+    return { scroller, wrapper, showHint, onScroll, currentHintText}
   }
 }
 </script>
 
 <style scoped>
-/* 滑动容器样式 */
+
 .img-scroll-inner {
   height: 350px;
   display: flex;
@@ -111,10 +142,9 @@ export default {
 }
 
 /* 图片样式 */
-/* 穿透 slot 内 img 元素 */
-::v-deep(.img-scroll-inner img) {
-  flex: 0 0 auto;
-  scroll-snap-align: start;
+.img-scroll-inner img {
+  flex: 0 0 auto;     /* 防止图片被压缩 */
+  scroll-snap-align: start; /* 滑动时对齐 */
   border-radius: 4px;
 }
 
@@ -143,7 +173,7 @@ export default {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transition: opacity 0.9s ease;
   z-index: 1000;
   user-select: none;
   white-space: nowrap;

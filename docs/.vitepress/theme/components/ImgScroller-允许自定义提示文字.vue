@@ -98,7 +98,7 @@ export default {
 </script>
 
 <style scoped>
-/* 滑动容器样式 */
+
 .img-scroll-inner {
   height: 350px;
   display: flex;
@@ -111,10 +111,9 @@ export default {
 }
 
 /* 图片样式 */
-/* 穿透 slot 内 img 元素 */
-::v-deep(.img-scroll-inner img) {
-  flex: 0 0 auto;
-  scroll-snap-align: start;
+.img-scroll-inner img {
+  flex: 0 0 auto;     /* 防止图片被压缩 */
+  scroll-snap-align: start; /* 滑动时对齐 */
   border-radius: 4px;
 }
 
