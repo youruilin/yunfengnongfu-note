@@ -45,7 +45,7 @@ export default {
 
       console.log('触发', text)
 
-      // 先延迟2秒显示提示
+      // 先延迟1.5秒显示提示
       showDelayTimer = setTimeout(() => {
         showHint.value = true
         // 显示后再等 autoHideMs 毫秒隐藏

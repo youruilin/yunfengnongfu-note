@@ -138,19 +138,30 @@
 }
 
 
-/* --------------------------------------------------------- */
+/* --------------------------- 代码快折叠样式 ------------------------------ */
+
+/* 微调插件底部的折叠箭头大小 */
 div.fold .fold-btn{
   height: 24px !important;
   bottom: -24px !important;
 }
-
 svg.fold-btn-icon{
   width: 12px;
   height: 12px;
-  animation: float1 infinite 2.2s !important;
 }
 
-/* 正则国际化 */
+/* 覆盖插件中的动画设置 */
+svg.fold-btn-icon {
+  animation: float1 infinite 2.2s !important;
+
+  &.turn {
+      animation: float2 infinite 2.2s !important;
+  }
+}
+
+/* --------------------------- end - 代码快折叠样式 -------------------------- */
+
+/* --------------------------- 正则国际化 -------------------- */
 .p-en.hidden {
   display: none;
 }
@@ -165,7 +176,7 @@ svg.fold-btn-icon{
   padding-top: 5px;
 }
 
-/*  */
+/* ------------------ 移动端滑动组件样式 ---------------------- */
 
 .img-row {
   display: flex;
@@ -193,7 +204,6 @@ svg.fold-btn-icon{
   }
 }
 
-
 .img-scroll {
   display: flex;
   gap: 10px;
@@ -215,4 +225,5 @@ svg.fold-btn-icon{
   scroll-snap-align: start; /* 滑动时对齐 */
   border-radius: 4px;
 }
+/* ------------------------ 移动端滑动样式 - end ------------------------ */
 
