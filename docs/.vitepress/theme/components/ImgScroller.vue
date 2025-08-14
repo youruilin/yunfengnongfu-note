@@ -109,6 +109,7 @@ export default {
 /* 滑动容器样式 */
 .img-scroll-inner {
   height: 350px;
+  border-radius: 4px;
   display: flex;
   gap: 10px;
   overflow-x: auto;   /* 横向滚动 */
