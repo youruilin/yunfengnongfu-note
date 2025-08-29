@@ -852,6 +852,77 @@ Component({
 
 
 
+## 使用 vscode 开发 uniapp
+
+#### 安装 uni-app 插件
+
+- 👉 安装 uni-app 开发插件
+  - [uni-create-view](https://marketplace.visualstudio.com/items?itemName=mrmaoddxxaa.create-uniapp-view) ：快速创建 uni-app 页面
+  - [uni-helper](https://marketplace.visualstudio.com/items?itemName=uni-helper.uni-helper-vscode) ：uni-app 代码提示
+  - [uniapp 小程序扩展](https://marketplace.visualstudio.com/items?itemName=evils.uniapp-vscode) ：鼠标悬停查文档
+- 👉 TS 类型校验
+  - 安装最新版本 **类型声明文件** `pnpm i -D miniprogram-api-typings@latest @uni-helper/uni-app-types@latest`
+  - 配置 `tsconfig.json`
+- 👉 JSON 注释问题
+  - 设置文件关联，把 `manifest.json` 和 `pages.json` 设置为 `jsonc`
+
+`tsconfig.json` 参考
+
+```json
+// tsconfig.json
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib": ["esnext", "dom"],
+    // 类型声明文件
+    "types": [
+      "@dcloudio/types", // uni-app API 类型
+      "miniprogram-api-typings", // 原生微信小程序类型
+      "@uni-helper/uni-app-types" // uni-app 组件类型
+    ]
+  },
+  // vue 编译器类型，校验标签类型
+  "vueCompilerOptions": {
+    // 原配置 experimentalRuntimeMode 已废弃，请升级 Vue - Official 插件至最新版本
+    "plugins": ["@uni-helper/uni-app-types/volar-plugin"] 
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
+```
+
+
+
+**工作区设置参考**
+
+```json
+// .vscode/settings.json
+{
+  // 在保存时格式化文件
+  "editor.formatOnSave": true,
+  // 文件格式化配置
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 配置语言的文件关联
+  "files.associations": {
+    "pages.json": "jsonc", // pages.json 可以写注释
+    "manifest.json": "jsonc" // manifest.json 可以写注释
+  }
+}
+```
+
+Vue - Official (之前是 Volar) 版本升级
+
+- 原依赖 `@types/wechat-miniprogram` 现调整为 [miniprogram-api-typings](https://github.com/wechat-miniprogram/api-typings)。
+- 原配置 `experimentalRuntimeMode` 现调整为 `plugins`。
+
+这一步处理很关键，否则 TS 项目无法校验组件属性类型。
+
 ## skyline 模式
 
 ::: details 🌟 什么是 Skyline 模式？
