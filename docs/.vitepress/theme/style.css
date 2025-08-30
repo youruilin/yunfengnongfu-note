@@ -227,3 +227,12 @@ svg.fold-btn-icon {
 }
 /* ------------------------ 移动端滑动样式 - end ------------------------ */
 
+figure {
+  /* text-align: center; */
+  margin: 1em 0;
+}
+figcaption {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 0.5em;
+}

@@ -3,6 +3,8 @@ import { defineConfig } from 'vitepress'
 import zh from './configCn.mts'
 import jp from './configJp.mts'
 
+import implicitFigures from 'markdown-it-implicit-figures'
+
 export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
@@ -17,6 +19,16 @@ export default defineConfig({
       label: '日本語',
       ...jp
 
+    }
+  },
+  markdown: {
+    config: (md) => {
+      md.use(implicitFigures, {
+        dataType: false,      // <figure data-type="image">，可关闭
+        figcaption: true,     // 启用 figcaption
+        tabindex: false,      // <figure tabindex="1">，可关闭
+        link: false           // 是否把图片自动包裹在 <a> 里
+      })
     }
   },
   themeConfig: {
