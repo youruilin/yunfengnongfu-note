@@ -68,15 +68,12 @@ export default defineConfig({
       level: [1, 2],
       label: '页面导航'
     },
-
-    
-    // lastUpdated: true, // ✅ 开启“最近更新时间”
     lastUpdated: {
       text: '最后更新于',
-      // formatOptions: {
-      //   dateStyle: 'full',
-      //   timeStyle: 'medium'
-      // }
+      formatOptions: {
+        dateStyle: 'medium',
+        timeStyle: 'medium'
+      }
     },
     nav: getNavData({ enableDirActiveMatch: true }), // 顶部的导航栏
     sidebar: getSidebarData(), // 侧边栏

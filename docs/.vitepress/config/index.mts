@@ -10,6 +10,7 @@ export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
   base:"/vitepress_init/",
+  lastUpdated: true, // ✅ 开启“最近更新时间”
   locales: {
     root: {
       label: '简体中文',
