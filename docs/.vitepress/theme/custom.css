@@ -1,0 +1,40 @@
+/**
+ * 自定义 VitePress 主题
+ * 在这里覆盖默认的 CSS 变量
+ */
+
+ :root {
+  /* 品牌色 - 亮色模式 */
+  --vp-c-brand-1: #34d399; /* 最浅 - 用于悬浮、轻量背景 */
+  --vp-c-brand-2: #10b981; /* 中等 - 用于悬停状态 */
+  --vp-c-brand-3: #018c49; /* 主要品牌色 - 用于默认状态 */
+  --vp-c-brand-4: #047857; /* 深色 - 用于激活状态 */
+  --vp-c-brand-5: #065f46; /* 最深 - 用于特殊场景 */
+  
+  /* 按钮样式 */
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: var(--vp-c-white);
+  --vp-button-brand-bg: var(--vp-c-brand-3);
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: var(--vp-c-white);
+  --vp-button-brand-hover-bg: var(--vp-c-brand-2);
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: var(--vp-c-white);
+  --vp-button-brand-active-bg: var(--vp-c-brand-1);
+}
+
+/* 暗色模式 */
+.dark {
+  --vp-c-brand-1: #34d399; /* 最浅 - 用于悬浮、轻量背景 */
+  --vp-c-brand-2: #10b981; /* 中等 - 用于悬停状态 */
+  --vp-c-brand-3: #018c49; /* 主要品牌色 - 用于默认状态 */
+  --vp-c-brand-4: #047857; /* 深色 - 用于激活状态 */
+  --vp-c-brand-5: #065f46; /* 最深 - 用于特殊场景 */
+}
+
+/* 其他自定义样式 */
+/* .vp-doc h1 {
+  color: var(--vp-c-brand-3);
+} */
+
+/* 自定义组件样式等 */

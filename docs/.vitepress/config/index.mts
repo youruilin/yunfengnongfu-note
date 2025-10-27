@@ -9,7 +9,7 @@ import implicitFigures from 'markdown-it-implicit-figures'
 export default defineConfig({
   title: "My Vue3.5 Project",
   description: "A VitePress Site",
-  base:"/vitepress_init/",
+  base:"/yunfengnongfu-note/",
   lastUpdated: true, // ✅ 开启“最近更新时间”
   locales: {
     root: {

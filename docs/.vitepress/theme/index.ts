@@ -6,6 +6,7 @@ import DefaultTheme from 'vitepress/theme'
 import ImgScroller from './components/ImgScroller.vue'
 
 import './style.css'
+import './custom.css'
 
 import { useData, useRoute } from 'vitepress'
 import codeblocksFold from 'vitepress-plugin-codeblocks-fold' // 导入方法
